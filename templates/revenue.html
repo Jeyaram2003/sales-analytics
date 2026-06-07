@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Revenue Analytics — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  {% set active = 'revenue' %}{% include 'sidebar.html' %}
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title"><h1>Revenue Analytics</h1></div>
+      <div class="topbar-right"><div class="topbar-badge"><span class="status-dot"></span> Live</div></div>
+    </div>
+    <div class="page-body">
+      <div class="cards">
+        <div class="card c-green">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+          <div class="card-label">Total Revenue</div><div class="card-value">₹{{ total_revenue }}</div><div class="card-sub">All-time total</div>
+        </div>
+        <div class="card c-blue">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-chart-line"></i></div><span class="card-trend trend-neutral">Avg</span></div>
+          <div class="card-label">Average Revenue</div><div class="card-value">₹{{ average_revenue }}</div><div class="card-sub">Per period average</div>
+        </div>
+        <div class="card c-orange">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-trophy"></i> Best</span></div>
+          <div class="card-label">Best Month</div><div class="card-value" style="font-size:17px;">{{ best_month }}</div><div class="card-sub">Peak performance month</div>
+        </div>
+      </div>
+      <div class="chart-card" style="margin-bottom:20px;">
+        <div class="chart-header"><div><div class="chart-title">Monthly Revenue Trend</div><div class="chart-subtitle">Revenue performance across all months</div></div><span class="chart-badge">Line Chart</span></div>
+        <canvas id="monthlyRevenueChart"></canvas>
+      </div>
+      <div class="insight-card">
+        <h2><i class="fa-solid fa-lightbulb"></i> Revenue Insights</h2>
+        <ul>
+          <li>Total Revenue Generated: <strong>₹{{ total_revenue }}</strong></li>
+          <li>Average Monthly Revenue: <strong>₹{{ average_revenue }}</strong></li>
+          <li>Highest Revenue Month: <strong>{{ best_month }}</strong></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+const mL={{ month_labels|tojson }}, mV={{ month_values|tojson }};
+new Chart(document.getElementById('monthlyRevenueChart'),{type:'line',data:{labels:mL,datasets:[{label:'Revenue (₹)',data:mV,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.08)',fill:true,tension:.4,pointBackgroundColor:'#3b82f6',pointRadius:5,pointHoverRadius:8}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#94a3b8',font:{family:'DM Sans',size:12}}}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+</script>
+</body></html>

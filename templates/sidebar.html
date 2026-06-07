@@ -1,0 +1,53 @@
+<aside class="sidebar">
+  <div class="sidebar-inner">
+    <div class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="logo-text"><strong>Sales Analytics</strong><span>BI Platform v2.0</span></div>
+    </div>
+    <span class="nav-label">Main</span>
+    <ul class="menu">
+      <li class="{{ 'active' if active == 'dashboard' else '' }}">
+        <a href="/dashboard" class="menu-link"><i class="fa-solid fa-house"></i><span>Dashboard</span></a>
+      </li>
+    </ul>
+    <span class="nav-label">Analytics</span>
+    <ul class="menu">
+      <li class="{{ 'active' if active == 'revenue' else '' }}">
+        <a href="/revenue" class="menu-link"><i class="fa-solid fa-money-bill-trend-up"></i><span>Revenue Analytics</span></a>
+      </li>
+      <li class="{{ 'active' if active == 'product' else '' }}">
+        <a href="/product" class="menu-link"><i class="fa-solid fa-box"></i><span>Product Analytics</span></a>
+      </li>
+      <li class="{{ 'active' if active == 'region' else '' }}">
+        <a href="/region" class="menu-link"><i class="fa-solid fa-location-dot"></i><span>Regional Analytics</span></a>
+      </li>
+    </ul>
+    <span class="nav-label">Intelligence</span>
+    <ul class="menu">
+      <li class="{{ 'active' if active == 'prediction' else '' }}">
+        <a href="/prediction" class="menu-link"><i class="fa-solid fa-robot"></i><span>ML Prediction</span></a>
+      </li>
+      <li class="{{ 'active' if active == 'forecast' else '' }}">
+        <a href="/forecast" class="menu-link"><i class="fa-solid fa-chart-line"></i><span>Sales Forecast</span></a>
+      </li>
+    </ul>
+    <span class="nav-label">Manage</span>
+    <ul class="menu">
+      <li class="{{ 'active' if active == 'reports' else '' }}">
+        <a href="/reports" class="menu-link"><i class="fa-solid fa-file-lines"></i><span>Reports</span></a>
+      </li>
+      <li class="{{ 'active' if active == 'upload' else '' }}">
+        <a href="/upload" class="menu-link"><i class="fa-solid fa-upload"></i><span>Upload Dataset</span></a>
+      </li>
+    </ul>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">A</div>
+        <div class="user-info"><strong>Admin</strong><span>Administrator</span></div>
+      </div>
+      <ul class="menu" style="margin-top:4px;">
+        <li><a href="/logout" class="menu-link" style="color:var(--red-soft)"><i class="fa-solid fa-right-from-bracket" style="color:var(--red)"></i><span>Logout</span></a></li>
+      </ul>
+    </div>
+  </div>
+</aside>

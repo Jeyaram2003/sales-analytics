@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Forecast — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="container">
+  {% set active = 'forecast' %}{% include 'sidebar.html' %}
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title"><h1>Sales Forecast</h1></div>
+      <div class="topbar-right">
+        <div class="topbar-badge" style="color:var(--cyan)"><i class="fa-solid fa-chart-line"></i> Trend Analysis</div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="cards">
+        <div class="card c-cyan">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-calendar-plus"></i></div><span class="card-trend trend-up">Next</span></div>
+          <div class="card-label">Next Forecast Month</div>
+          <div class="card-value">Month {{ future_month }}</div>
+          <div class="card-sub">Next projected period</div>
+        </div>
+        <div class="card c-green">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+          <div class="card-label">Predicted Revenue</div>
+          <div class="card-value">₹{{ predicted_revenue }}</div>
+          <div class="card-sub">ML forecasted value</div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:20px;">
+        <div class="chart-header">
+          <div><div class="chart-title">Historical + Forecasted Revenue</div>
+          <div class="chart-subtitle">Blue = Actual &nbsp;|&nbsp; Green Dashed = Forecast</div></div>
+          <span class="chart-badge">Line Chart</span>
+        </div>
+        <canvas id="forecastChart" width="800" height="350" style="width:100%;height:350px;display:block;"></canvas>
+      </div>
+
+      <div class="insight-card">
+        <h2><i class="fa-solid fa-lightbulb"></i> Forecast Insights</h2>
+        <ul>
+          <li>Forecast generated using <strong>Linear Regression trend analysis</strong></li>
+          <li>Green dashed line represents <strong>projected future revenue</strong></li>
+          <li>Blue solid line represents <strong>actual historical data</strong></li>
+          <li>Predicted revenue for Month {{ future_month }}: <strong>₹{{ predicted_revenue }}</strong></li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  var histL = {{ hist_labels | tojson }};
+  var histV = {{ hist_values | tojson }};
+  var foreL = {{ fore_labels | tojson }};
+  var foreV = {{ fore_values | tojson }};
+  var allLabels = histL.concat(foreL);
+  var actualData = histV.concat(new Array(foreL.length).fill(null));
+  var forecastData = new Array(histL.length - 1).fill(null);
+  forecastData.push(histV[histV.length - 1]);
+  forecastData = forecastData.concat(foreV);
+  var ctx = document.getElementById('forecastChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: [
+        { label: 'Actual Revenue', data: actualData, borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.08)', fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor: '#3b82f6', borderWidth: 2 },
+        { label: 'Forecasted Revenue', data: forecastData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.06)', fill: true, tension: 0.4, borderDash: [6,4], pointRadius: 5, pointBackgroundColor: '#10b981', borderWidth: 2 }
+      ]
+    },
+    options: {
+      responsive: false,
+      plugins: { legend: { labels: { color: '#94a3b8', font: { size: 13 } } } },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: 'rgba(255,255,255,0.05)' } }
+      }
+    }
+  });
+</script>
+</body>
+</html>

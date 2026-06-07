@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ML Prediction — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  {% set active = 'prediction' %}{% include 'sidebar.html' %}
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title"><h1>ML Revenue Prediction</h1></div>
+      <div class="topbar-right"><div class="topbar-badge" style="color:var(--purple)"><i class="fa-solid fa-robot"></i> Linear Regression</div></div>
+    </div>
+    <div class="page-body">
+      <div class="ml-cards">
+        <div class="ml-card"><div class="ml-card-icon" style="background:var(--accent-soft);color:var(--accent)"><i class="fa-solid fa-chart-column"></i></div><h3>MAE</h3><p>{{ mae }}</p><div class="ml-label">Mean Absolute Error</div></div>
+        <div class="ml-card"><div class="ml-card-icon" style="background:var(--orange-soft);color:var(--orange)"><i class="fa-solid fa-wave-square"></i></div><h3>RMSE</h3><p>{{ rmse }}</p><div class="ml-label">Root Mean Squared Error</div></div>
+        <div class="ml-card"><div class="ml-card-icon" style="background:var(--green-soft);color:var(--green)"><i class="fa-solid fa-bullseye"></i></div><h3>R² Score</h3><p>{{ r2 }}</p><div class="ml-label">Model Accuracy Score</div></div>
+      </div>
+      <div class="predict-form-card">
+        <h2><i class="fa-solid fa-robot" style="color:var(--purple)"></i> Predict Future Revenue</h2>
+        <form method="POST">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Month Number</label>
+              <input class="form-control" type="number" name="month" placeholder="e.g. 13 for next month" min="1" required value="{{ month if month else '' }}">
+            </div>
+            <button type="submit" class="btn-primary"><i class="fa-solid fa-bolt"></i> Predict</button>
+          </div>
+        </form>
+        {% if prediction %}
+        <div class="predict-result">
+          <i class="fa-solid fa-chart-line"></i>
+          <div>
+            <div class="predict-result-label">Predicted Revenue for Month {{ month }}</div>
+            <div class="predict-result-value">₹{{ prediction }}</div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="chart-card" style="margin-bottom:20px;">
+        <div class="chart-header"><div><div class="chart-title">Model Metrics Overview</div><div class="chart-subtitle">Visual representation of accuracy metrics</div></div><span class="chart-badge">Bar</span></div>
+        <canvas id="predictionChart"></canvas>
+      </div>
+      <div class="insight-card">
+        <h2><i class="fa-solid fa-lightbulb"></i> Prediction Insights</h2>
+        <ul>
+          <li>Model trained using Scikit-Learn <strong>Linear Regression</strong></li>
+          <li>R² Score of <strong>{{ r2 }}</strong> indicates prediction reliability</li>
+          <li>Lower MAE and RMSE values indicate <strong>higher accuracy</strong></li>
+          <li>Enter a future month number to generate a revenue prediction</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+new Chart(document.getElementById('predictionChart'),{type:'bar',data:{labels:['MAE','RMSE','R² Score'],datasets:[{label:'Metric Value',data:[{{ mae }},{{ rmse }},{{ r2 }}],backgroundColor:['rgba(59,130,246,.8)','rgba(245,158,11,.8)','rgba(16,185,129,.8)'],borderRadius:8,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#94a3b8',font:{family:'DM Sans'}}}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+</script>
+</body></html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regional Analytics — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  {% set active = 'region' %}{% include 'sidebar.html' %}
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title"><h1>Regional Analytics</h1></div>
+      <div class="topbar-right"><div class="topbar-badge"><span class="status-dot"></span> Live</div></div>
+    </div>
+    <div class="page-body">
+      <div class="cards">
+        <div class="card c-purple">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-trophy"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-star"></i> #1</span></div>
+          <div class="card-label">Best Region</div><div class="card-value" style="font-size:17px;">{{ best_region }}</div><div class="card-sub">Top performing territory</div>
+        </div>
+        <div class="card c-green">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+          <div class="card-label">Best Region Revenue</div><div class="card-value">₹{{ best_region_revenue }}</div><div class="card-sub">Top region earnings</div>
+        </div>
+        <div class="card c-blue">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-location-dot"></i></div></div>
+          <div class="card-label">Total Regions</div><div class="card-value">{{ total_regions }}</div><div class="card-sub">Territories tracked</div>
+        </div>
+      </div>
+      <div class="chart-grid" style="margin-bottom:20px;">
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Revenue by Region</div><div class="chart-subtitle">Territory-wise performance</div></div><span class="chart-badge">Bar</span></div>
+          <canvas id="regionBarChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Regional Share</div><div class="chart-subtitle">Revenue distribution by region</div></div><span class="chart-badge">Polar</span></div>
+          <canvas id="regionPolarChart"></canvas>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><h3><i class="fa-solid fa-location-dot" style="color:var(--accent);margin-right:8px;"></i>Region Performance Table</h3></div>
+        <table class="product-table">
+          <thead><tr><th>#</th><th>Region</th><th>Revenue (₹)</th><th>Performance</th></tr></thead>
+          <tbody>
+          {% for label, value in zip(region_labels, region_values) %}
+          <tr>
+            <td><span class="rank-badge {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">{{ loop.index }}</span></td>
+            <td>{{ label }}</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:var(--green);">{{ value | round(2) }}</td>
+            <td>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width:{{ ((value / region_values[0]) * 100) | int }}%"></div></div>
+                <span style="font-size:11px;color:var(--text-muted);min-width:36px;">{{ ((value / region_values[0]) * 100) | int }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+const rL={{ region_labels|tojson }}, rV={{ region_values|tojson }};
+const colors=['rgba(59,130,246,.8)','rgba(16,185,129,.8)','rgba(245,158,11,.8)','rgba(139,92,246,.8)','rgba(6,182,212,.8)'];
+new Chart(document.getElementById('regionBarChart'),{type:'bar',data:{labels:rL,datasets:[{label:'Revenue (₹)',data:rV,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#94a3b8',font:{family:'DM Sans'}}}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+new Chart(document.getElementById('regionPolarChart'),{type:'polarArea',data:{labels:rL,datasets:[{data:rV,backgroundColor:['rgba(59,130,246,.7)','rgba(16,185,129,.7)','rgba(245,158,11,.7)','rgba(139,92,246,.7)','rgba(6,182,212,.7)'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{family:'DM Sans',size:12},padding:16}}}}});
+</script>
+</body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Analytics — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+  {% set active = 'product' %}{% include 'sidebar.html' %}
+  <main class="main-content">
+    <div class="top-bar">
+      <div class="page-title"><h1>Product Analytics</h1></div>
+      <div class="topbar-right"><div class="topbar-badge"><span class="status-dot"></span> Live</div></div>
+    </div>
+    <div class="page-body">
+      <div class="cards">
+        <div class="card c-orange">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-trophy"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-star"></i> Best</span></div>
+          <div class="card-label">Top Product</div><div class="card-value" style="font-size:17px;">{{ top_product }}</div><div class="card-sub">Highest revenue product</div>
+        </div>
+        <div class="card c-green">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div><span class="card-trend trend-up"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+          <div class="card-label">Top Revenue</div><div class="card-value">₹{{ top_product_revenue }}</div><div class="card-sub">Best product earnings</div>
+        </div>
+        <div class="card c-blue">
+          <div class="card-top"><div class="card-icon"><i class="fa-solid fa-boxes-stacked"></i></div></div>
+          <div class="card-label">Total Products</div><div class="card-value">{{ total_products }}</div><div class="card-sub">Unique products tracked</div>
+        </div>
+      </div>
+      <div class="chart-grid" style="margin-bottom:20px;">
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Revenue by Product</div><div class="chart-subtitle">Best-selling products by revenue</div></div><span class="chart-badge">Bar</span></div>
+          <canvas id="productBarChart"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header"><div><div class="chart-title">Product Share</div><div class="chart-subtitle">Revenue distribution</div></div><span class="chart-badge">Doughnut</span></div>
+          <canvas id="productPieChart"></canvas>
+        </div>
+      </div>
+      <div class="table-card">
+        <div class="table-head"><h3><i class="fa-solid fa-list" style="color:var(--accent);margin-right:8px;"></i>Product Performance Table</h3></div>
+        <table class="product-table">
+          <thead><tr><th>#</th><th>Product</th><th>Revenue (₹)</th><th>Performance</th></tr></thead>
+          <tbody>
+          {% for row in product_table %}
+          <tr>
+            <td><span class="rank-badge {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}">{{ loop.index }}</span></td>
+            <td>{{ row.Product }}</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:var(--green);">{{ row.Revenue | round(2) }}</td>
+            <td>
+              <div class="progress-bar-wrap">
+                <div class="progress-bar"><div class="progress-bar-fill" style="width:{{ ((row.Revenue / product_values[0]) * 100) | int }}%"></div></div>
+                <span style="font-size:11px;color:var(--text-muted);min-width:36px;">{{ ((row.Revenue / product_values[0]) * 100) | int }}%</span>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+const pL={{ product_labels|tojson }}, pV={{ product_values|tojson }};
+const colors=['rgba(59,130,246,.8)','rgba(16,185,129,.8)','rgba(245,158,11,.8)','rgba(139,92,246,.8)','rgba(6,182,212,.8)','rgba(239,68,68,.8)'];
+const base={responsive:true,maintainAspectRatio:true,plugins:{legend:{labels:{color:'#94a3b8',font:{family:'DM Sans',size:12}}}},scales:{x:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}},y:{ticks:{color:'#64748b'},grid:{color:'rgba(255,255,255,0.04)'}}}};
+new Chart(document.getElementById('productBarChart'),{type:'bar',data:{labels:pL,datasets:[{label:'Revenue (₹)',data:pV,backgroundColor:colors,borderRadius:6,borderSkipped:false}]},options:base});
+new Chart(document.getElementById('productPieChart'),{type:'doughnut',data:{labels:pL,datasets:[{data:pV,backgroundColor:['#3b82f6','#10b981','#f59e0b','#8b5cf6','#06b6d4','#ef4444'],borderWidth:0,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:true,plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{family:'DM Sans',size:12},padding:16}}},cutout:'62%'}});
+</script>
+</body></html>

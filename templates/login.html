@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — Sales Analytics</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="login-page">
+  <div class="login-bg-grid"></div>
+  <div class="login-glow"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="login-logo-text">
+        <h2>Sales Analytics</h2>
+        <p>Business Intelligence Platform</p>
+      </div>
+    </div>
+    <h1 class="login-heading">Welcome back</h1>
+    <p class="login-subheading">Sign in to access your analytics dashboard</p>
+    {% if error %}
+    <div class="flash-error"><i class="fa-solid fa-circle-exclamation"></i> {{ error }}</div>
+    {% endif %}
+    <form method="POST">
+      <label class="login-label">Username</label>
+      <div class="login-input-wrap">
+        <i class="fa-solid fa-user login-input-icon"></i>
+        <input class="login-input" type="text" name="username" placeholder="Enter username" required autocomplete="off">
+      </div>
+      <p class="login-hint">Default: admin</p>
+      <label class="login-label" style="margin-top:14px; display:block;">Password</label>
+      <div class="login-input-wrap">
+        <i class="fa-solid fa-lock login-input-icon"></i>
+        <input class="login-input" type="password" name="password" placeholder="Enter password" required>
+      </div>
+      <p class="login-hint">Default: admin123</p>
+      <button type="submit" class="login-btn" style="margin-top:20px;">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </button>
+    </form>
+    <div class="login-footer">
+      <span class="login-footer-item"><i class="fa-solid fa-shield-halved"></i> Secure</span>
+      <span class="login-footer-item"><i class="fa-solid fa-circle-check"></i> Encrypted</span>
+      <span class="login-footer-item"><i class="fa-solid fa-bolt"></i> Real-time</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Analytics — Welcome</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .landing-page {
+      min-height: 100vh;
+      background: var(--bg-base);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    .landing-bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 100%);
+      pointer-events: none;
+    }
+    .landing-glow-1 {
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+      top: -100px; left: -100px;
+      pointer-events: none;
+    }
+    .landing-glow-2 {
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+      bottom: -50px; right: -50px;
+      pointer-events: none;
+    }
+    /* NAV */
+    .landing-nav {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 60px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(8,13,20,0.8);
+      backdrop-filter: blur(20px);
+    }
+    .landing-nav-logo {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .landing-nav-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent); font-size: 16px;
+    }
+    .landing-nav-logo span {
+      font-size: 15px; font-weight: 700; color: var(--text-primary);
+    }
+    .landing-nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13.5px; font-weight: 500;
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+    .nav-link-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+    .nav-link-primary {
+      background: var(--accent);
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 13.5px; font-weight: 600;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.2s;
+    }
+    .nav-link-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(59,130,246,0.35); }
+
+    /* HERO */
+    .landing-hero {
+      position: relative;
+      z-index: 5;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 40px 60px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(59,130,246,0.25);
+      color: var(--accent);
+      font-size: 12px; font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; animation: pulse-dot 2s infinite; }
+    .hero-title {
+      font-size: 56px; font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      max-width: 760px;
+      margin-bottom: 20px;
+    }
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--accent), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 17px; color: var(--text-muted);
+      max-width: 520px; line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .hero-btns {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center;
+      margin-bottom: 60px;
+    }
+    .btn-hero-primary {
+      background: var(--accent); color: white;
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 700;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 24px rgba(59,130,246,0.3);
+    }
+    .btn-hero-primary:hover { background: #2563eb; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(59,130,246,0.4); }
+    .btn-hero-secondary {
+      background: var(--bg-card); color: var(--text-primary);
+      padding: 14px 32px; border-radius: 10px;
+      font-size: 15px; font-weight: 600;
+      text-decoration: none;
+      border: 1px solid var(--border-strong);
+      display: flex; align-items: center; gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-hero-secondary:hover { background: var(--bg-hover); transform: translateY(-2px); }
+
+    /* STATS */
+    .hero-stats {
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap; justify-content: center;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-value { font-size: 28px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
+    .hero-stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .hero-stat-divider { width: 1px; height: 40px; background: var(--border); }
+
+    /* FEATURES */
+    .landing-features {
+      position: relative; z-index: 5;
+      padding: 60px 60px;
+      background: var(--bg-panel);
+      border-top: 1px solid var(--border);
+    }
+    .features-title {
+      text-align: center; font-size: 28px; font-weight: 700;
+      color: var(--text-primary); margin-bottom: 8px; letter-spacing: -0.02em;
+    }
+    .features-sub { text-align: center; color: var(--text-muted); font-size: 14px; margin-bottom: 40px; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: all 0.2s;
+    }
+    .feature-card:hover { border-color: var(--border-strong); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .feature-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .feature-card h3 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 6px; }
+    .feature-card p { font-size: 12.5px; color: var(--text-muted); line-height: 1.6; }
+
+    /* FOOTER */
+    .landing-footer {
+      position: relative; z-index: 5;
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12.5px;
+    }
+  </style>
+</head>
+<body>
+<div class="landing-page">
+  <div class="landing-bg-grid"></div>
+  <div class="landing-glow-1"></div>
+  <div class="landing-glow-2"></div>
+
+  <!-- NAV -->
+  <nav class="landing-nav">
+    <div class="landing-nav-logo">
+      <div class="landing-nav-logo-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <span>Sales Analytics</span>
+    </div>
+    <div class="landing-nav-links">
+      <a href="#features" class="nav-link-btn">Features</a>
+      <a href="/login" class="nav-link-primary"><i class="fa-solid fa-right-to-bracket"></i> Sign In</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="landing-hero">
+    <div class="hero-badge"><span></span> Business Intelligence Platform</div>
+    <h1 class="hero-title">
+      Turn Your Sales Data Into<br>
+      <span class="highlight">Powerful Insights</span>
+    </h1>
+    <p class="hero-sub">
+      A complete analytics dashboard with real-time KPIs, interactive charts,
+      ML-powered revenue prediction, and automated PDF reports.
+    </p>
+    <div class="hero-btns">
+      <a href="/login" class="btn-hero-primary">
+        <i class="fa-solid fa-rocket"></i> Get Started
+      </a>
+      <a href="#features" class="btn-hero-secondary">
+        <i class="fa-solid fa-circle-info"></i> Learn More
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value">6+</div>
+        <div class="hero-stat-label">Analytics Modules</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">ML</div>
+        <div class="hero-stat-label">Prediction Engine</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">PDF</div>
+        <div class="hero-stat-label">Report Export</div>
+      </div>
+      <div class="hero-stat-divider"></div>
+      <div class="hero-stat">
+        <div class="hero-stat-value">Live</div>
+        <div class="hero-stat-label">Data Processing</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="landing-features" id="features">
+    <h2 class="features-title">Everything You Need</h2>
+    <p class="features-sub">Powerful analytics modules built for real business intelligence</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--accent-soft);color:var(--accent)"><i class="fa-solid fa-house"></i></div>
+        <h3>Sales Dashboard</h3>
+        <p>KPI cards, revenue overview, best product and region at a glance.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--green-soft);color:var(--green)"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+        <h3>Revenue Analytics</h3>
+        <p>Monthly revenue trends with interactive line charts and peak analysis.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--orange-soft);color:var(--orange)"><i class="fa-solid fa-box"></i></div>
+        <h3>Product Analytics</h3>
+        <p>Best-selling products ranked by revenue with progress bars.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--purple-soft);color:var(--purple)"><i class="fa-solid fa-location-dot"></i></div>
+        <h3>Regional Analytics</h3>
+        <p>Territory-wise performance comparison with polar and bar charts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(139,92,246,0.15);color:#a78bfa"><i class="fa-solid fa-robot"></i></div>
+        <h3>ML Prediction</h3>
+        <p>Linear Regression-based revenue prediction with R² score evaluation.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--cyan-soft);color:var(--cyan)"><i class="fa-solid fa-chart-line"></i></div>
+        <h3>Sales Forecast</h3>
+        <p>Future revenue projection using historical trend analysis.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--red-soft);color:var(--red)"><i class="fa-solid fa-file-pdf"></i></div>
+        <h3>PDF Reports</h3>
+        <p>Download complete analytics reports instantly with one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:var(--green-soft);color:var(--green)"><i class="fa-solid fa-upload"></i></div>
+        <h3>Data Upload</h3>
+        <p>Upload new Excel datasets anytime to refresh all analytics instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    &copy; 2025 Sales Analytics Dashboard &nbsp;|&nbsp; Built with Flask, Pandas, Scikit-Learn & Chart.js
+  </footer>
+</div>
+</body>
+</html>
